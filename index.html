@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dilekçe Oluştur</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    body {
+      font-family: Calibri, "Times New Roman", serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 6px;
+      margin-bottom: 16px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 10px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+    }
+    table, th, td {
+      border: 1px solid black;
+      text-align: center;
+      padding: 10px;
+    }
+    .letter-section {
+      display: none;
+      margin-top: 40px;
+      padding: 40px;
+      background: white;
+      border: none;
+    }
+    .center-text {
+      text-align: center;
+      margin: 0;
+      line-height: 1.1;
+    }
+    .left-text {
+      text-align: justify;
+      margin-top: 20px;
+      white-space: pre-line;
+    }
+    .download-button {
+      display: none;
+      margin-top: 20px;
+    }
+    .ders-item {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 20px;
+      background-color: #fafafa;
+    }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .letter-section, .letter-section * {
+        visibility: visible;
+      }
+      .letter-section {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 210mm;
+        height: 297mm;
+        background: white !important;
+        padding: 40px;
+        margin: 0;
+        box-shadow: none !important;
+        border: none !important;
+      }
+      .download-button {
+        display: none !important;
+      }
+    }
+    .logo-image {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 20px;
+      max-width: 100px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Mazeret Sınavı Talep Dilekçesi Oluşturma</h2>
+    <form id="dilekceForm">
+      <label>Adınız:</label>
+      <input type="text" id="ad" required />
+      <label>Soyadınız:</label>
+      <input type="text" id="soyad" required />
+      <label>Öğrenci Numarası:</label>
+      <input type="text" id="numara" required />
+      <label>E-posta:</label>
+      <input type="email" id="email" required />
+      <label>Cep Telefonu:</label>
+      <input type="text" id="telefon" required />
+      <label>Mazeretiniz:</label>
+      <textarea id="mazeret" rows="3" required></textarea>
+      <label>Bölümünüzü Seçiniz:</label>
+      <select id="bolumSelect" required>
+        <option value="MATEMATİK BÖLÜM BAŞKANLIĞI'NA">MATEMATİK</option>
+        <option value="FİZİK BÖLÜM BAŞKANLIĞI'NA">FİZİK</option>
+        <option value="KİMYA BÖLÜM BAŞKANLIĞI'NA">KİMYA</option>
+        <option value="İSTATİSTİK BÖLÜM BAŞKANLIĞI'NA">İSTATİSTİK</option>
+        <option value="MOLEKÜLER BİYOLOJİ VE GENETİK BÖLÜM BAŞKANLIĞI'NA">MOLEKÜLER BİYOLOJİ VE GENETİK</option>
+        <option value="TÜRK DİLİ VE EDEBİYATI BÖLÜM BAŞKANLIĞI'NA">TÜRK DİLİ VE EDEBİYATI</option>
+        <option value="BATI DİLLERİ VE EDEBİYATLARI BÖLÜM BAŞKANLIĞI'NA">BATI DİLLERİ VE EDEBİYATLARI</option>
+      </select>
+      <h3>Sınavına Giremediğim Dersler</h3>
+      <div id="dersListesi"></div>
+      <button type="button" onclick="dersEkle()">➕ Ders Ekle</button>
+      <br><br>
+      <button type="submit">Dilekçeyi Oluştur</button>
+    </form>
+
+    <div class="letter-section" id="dilekceOutput">
+    <img src="https://ytumat.github.io/mazeret_sinav_talebi_dilekcesi/logo.png" alt="Üniversite Logosu" class="logo-image" />
+      <p class="center-text" style="font-weight: bold;">FEN-EDEBİYAT FAKÜLTESİ</p>
+      <p id="bolumYazisi" class="center-text" style="font-weight: bold;"></p>
+      <p class="center-text" style="font-style: italic;margin-bottom: 1cm;">(Mazeret Sınav Talep Formu)</p>
+      <div class="left-text" id="ogrenciBilgileri"></div>
+      <p>2025-2026 Eğitim-Öğretim yılı GÜZ Yarıyılında aşağıda belirtmiş olduğum mazeretten dolayı üniversitemiz diğer bölümlerinden almak istediğim aşağıdaki ders(ler)in öğrenci otomasyon sistemine işlenmesi için gereğini arz ederim.</p>
+      <p><strong>Mazeret:</strong> <span id="mazeretMetni"></span></p>
+      <p style="margin-top: 30px;"><strong>SINAVINA GİREMEDİĞİM DERSLER</strong></p>
+      <table id="dersTablosu">
+        <thead>
+          <tr>
+            <th>Dersin Kodu</th>
+            <th>Dersin Adı</th>
+            <th>Grup</th>
+            <th>Öğretim Üyesi</th>
+            <th>Sınav Tarihi</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <br><br>
+      <p style="text-align: right;" id="tarihYeri"></p>
+      <p style="text-align: right;" id="imzaAlani">İmza: _________</p>
+    </div>
+
+    <div class="download-button" id="downloadBtnDiv">
+      <button id="downloadBtn">📥 PDF Olarak İndir</button>
+    </div>
+  </div>
+
+  <script>
+    function formatDersAdi(dersAdi) {
+      if (!dersAdi) return "";
+      const firstThree = dersAdi.slice(0, 3).toUpperCase();
+      const rest = dersAdi.slice(3);
+      const turkishToLower = (str) =>
+        str.replace(/İ/g, "i").replace(/I/g, "ı")
+           .replace(/Ş/g, "ş").replace(/Ğ/g, "ğ")
+           .replace(/Ü/g, "ü").replace(/Ö/g, "ö")
+           .replace(/Ç/g, "ç").toLowerCase();
+      const capitalizeWords = (str) =>
+        str.split(" ").map(k =>
+          k.length > 0 ? k[0].toUpperCase() + turkishToLower(k.slice(1)) : ""
+        ).join(" ");
+      return firstThree + capitalizeWords(rest.trim());
+    }
+
+    function dersEkle() {
+      const container = document.getElementById("dersListesi");
+      const div = document.createElement("div");
+      div.className = "ders-item";
+      div.innerHTML = `
+        <label>Dersin Kodu:</label>
+        <input type="text" name="derskod" required />
+        <label>Dersin Adı:</label>
+        <input type="text" name="dersad" required />
+        <label>Dersin Grubu:</label>
+        <input type="text" name="dersgrup" required />
+        <label>Öğretim Üyesi:</label>
+        <input type="text" name="dershoca" required />
+        <label>Sınav Tarihi:</label>
+        <input type="text" name="sınavtarih" required />
+      `;
+      container.appendChild(div);
+    }
+
+    window.onload = () => dersEkle();
+
+    document.getElementById("dilekceForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const ad = document.getElementById("ad").value;
+      const soyad = document.getElementById("soyad").value;
+      const numara = document.getElementById("numara").value;
+      const email = document.getElementById("email").value;
+      const telefon = document.getElementById("telefon").value;
+      const bolum = document.getElementById("bolumSelect").value;
+      const mazeret = document.getElementById("mazeret").value;
+      const adSoyad = `${ad}_${soyad}`.replace(/\s+/g, "_");
+      window.adSoyad = adSoyad;
+
+      const today = new Date();
+      const formattedDate = today.toLocaleDateString("tr-TR");
+
+      const bilgiler = `<strong>Ad Soyad:</strong> ${ad} ${soyad}<br>
+<strong>Öğrenci No:</strong> ${numara}<br>
+<strong>E-posta:</strong> ${email}<br>
+<strong>Telefon:</strong> ${telefon}<br><div style="margin-bottom:2cm;"></div>`;
+      document.getElementById("ogrenciBilgileri").innerHTML = bilgiler;
+      document.getElementById("bolumYazisi").innerText = bolum;
+      document.getElementById("tarihYeri").innerText = `Tarih: ${formattedDate}`;
+      document.getElementById("mazeretMetni").innerText = mazeret;
+
+      const tbody = document.querySelector("#dersTablosu tbody");
+      tbody.innerHTML = "";
+
+      const dersler = document.querySelectorAll(".ders-item");
+      dersler.forEach((ders) => {
+        const kod = ders.querySelector("input[name='derskod']").value;
+        const ad = formatDersAdi(ders.querySelector("input[name='dersad']").value);
+        const grup = ders.querySelector("input[name='dersgrup']").value;
+        const hoca = ders.querySelector("input[name='dershoca']").value;
+        const tarih = ders.querySelector("input[name='sınavtarih']").value;
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${kod}</td>
+          <td>${ad}</td>
+          <td>${grup}</td>
+          <td>${hoca}</td>
+          <td>${tarih}</td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      document.getElementById("dilekceOutput").style.display = "block";
+      document.getElementById("downloadBtnDiv").style.display = "block";
+    });
+
+    document.getElementById("downloadBtn").addEventListener("click", function () {
+      const img = document.querySelector(".logo-image");
+
+      if (!img.complete) {
+        img.onload = () => startPdf();
+        img.onerror = () => startPdf();
+      } else {
+        startPdf();
+      }
+
+      function startPdf() {
+        const element = document.getElementById("dilekceOutput");
+        const opt = {
+          margin: 0.5,
+          filename: `${window.adSoyad}_dilekce.pdf`,
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true, allowTaint: true },
+          jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
+        };
+        html2pdf().set(opt).from(element).save();
+      }
+    });
+  </script>
+</body>
+</html>
