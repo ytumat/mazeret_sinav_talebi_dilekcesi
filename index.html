@@ -175,6 +175,23 @@ table {
   overflow-x: auto; /* Mobilde yatay kaydırma aktif olur */
 }
 
+    /* --- PDF çıktısı için tam A4 boyutunda sabit alan --- */
+.letter-section {
+  width: 794px;             /* A4 genişliği (96 DPI'ya göre) */
+  min-height: 1123px;       /* A4 yüksekliği */
+  margin: 0 auto;           /* Ortala */
+  background: white;
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+/* Sayfa sonuna yakın içeriklerin bölünmesini engeller */
+.alt-kisim,
+#gerekceTablosu,
+#dersTablosu {
+  page-break-inside: avoid;
+}
+
 
     
   </style>
@@ -459,18 +476,19 @@ const kod = formatDersKodu(kodRaw);
   const imgWidth = pdfWidth;
   const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-  let position = 0;
+   let position = 0;
   let heightLeft = imgHeight;
 
-  // Eğer çıktı bir sayfadan uzunsa sayfa ekle
+  pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+  heightLeft -= pdfHeight;
+
   while (heightLeft > 0) {
+    position = heightLeft - imgHeight;
+    pdf.addPage();
     pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
     heightLeft -= pdfHeight;
-    if (heightLeft > 0) {
-      pdf.addPage();
-      position = -pdfHeight;
-    }
   }
+
 
   pdf.setFont("helvetica", "italic");
   pdf.setFontSize(8);
@@ -487,6 +505,7 @@ const kod = formatDersKodu(kodRaw);
   </script>
 </body>
 </html>
+
 
 
 
