@@ -147,6 +147,29 @@
   padding: 3px 10px; /* Dilersen padding ile de oynayabilirsin */
 }
 
+@media (max-width: 768px) {
+  .alt-kisim {
+    flex-direction: column;     /* İki kolon üst üste gelsin */
+  }
+  .sol-metni, .sag-tablo {
+    max-width: 100%;
+  }
+  .logo-image {
+    max-width: 60px;           /* Küçük ekranda logo daha ufak */
+  }
+  button {
+    width: 100%;               /* Butonlar ekrana otursun */
+    margin-top: 10px;
+  }
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow-x: auto;
+  display: block; /* Mobilde yatay kaydırma aktif olur */
+}
+
+    
   </style>
 </head>
 <body>
@@ -460,6 +483,7 @@ pdf.text("(Form No: FR-0607; Revizyon Tarihi:14.01.2014; Revizyon No: 00)", 10, 
   </script>
 </body>
 </html>
+
 
 
 
