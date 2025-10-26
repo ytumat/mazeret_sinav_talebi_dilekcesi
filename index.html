@@ -122,7 +122,7 @@
 .sol-metni {
   flex: 1;
   max-width: 50%;
-  font-size: 16px;
+  font-size: 13px;
   line-height: 1.4;
 }
 
@@ -493,7 +493,9 @@ const kod = formatDersKodu(kodRaw);
   pdf.setFont("helvetica", "italic");
   pdf.setFontSize(8);
   pdf.setTextColor(150);
-  pdf.text("(Form No: FR-0607; Revizyon Tarihi:14.01.2014; Revizyon No: 00)", 10, 290);
+ const footerY = pdf.internal.pageSize.getHeight() - 7; // her cihazda sayfa altı
+pdf.text("(Form No: FR-0607; Revizyon Tarihi:14.01.2014; Revizyon No: 00)", 10, footerY);
+
 
   pdf.save(`${window.adSoyad || "dilekce"}.pdf`);
   downloadBtnDiv.style.visibility = "visible";
@@ -505,6 +507,7 @@ const kod = formatDersKodu(kodRaw);
   </script>
 </body>
 </html>
+
 
 
 
