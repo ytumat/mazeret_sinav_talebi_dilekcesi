@@ -2,6 +2,8 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Dilekçe Oluştur</title>
   <style>
     body {
@@ -11,9 +13,10 @@
     }
     .container {
       max-width: 900px;
+      width: 95%;           /* Mobil ekranlarda kenarlardan taşmayı engeller */
       margin: auto;
       background: white;
-      padding: 30px;
+      padding: 20px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     input, select, textarea {
@@ -198,6 +201,7 @@
 Gereğini saygılarımla arz ederim.   
 </p>
 <p id="adSoyadYazisi" style="text-align: right; margin-top: 40px;"></p>
+<p id="epostaAltMetin" style="text-align: center; margin-top: 40px; color:red; font-style: italic;"></p>
 <p id="telefonYazisi" style="text-align: left; margin-top: 10px;"></p>
 <p id="emailYazisi" style="text-align: left; margin-top: 2px;"></p>
 <br>
@@ -255,8 +259,6 @@ Gereğini saygılarımla arz ederim.
 
  <p style="text-align: right;" id="tarihYeri"></p>
 <p style="text-align: right;" id="imzaAlani">İmza: _________</p>
-
-<p id="epostaAltMetin" style="text-align: center; margin-top: 40px; color:red; font-style: italic;"></p>
 
 
 
@@ -458,6 +460,7 @@ pdf.text("(Form No: FR-0607; Revizyon Tarihi:14.01.2014; Revizyon No: 00)", 10, 
   </script>
 </body>
 </html>
+
 
 
 
