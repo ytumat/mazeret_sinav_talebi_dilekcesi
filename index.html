@@ -162,12 +162,19 @@
     margin-top: 10px;
   }
 }
+/* Tüm tablolar için */
 table {
   width: 100%;
   border-collapse: collapse;
-  overflow-x: auto;
-  display: block; /* Mobilde yatay kaydırma aktif olur */
+  margin-top: 30px;
 }
+
+/* Sadece geniş tablo içeriği için yatay kaydırma */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto; /* Mobilde yatay kaydırma aktif olur */
+}
+
 
     
   </style>
@@ -232,7 +239,7 @@ Gereğini saygılarımla arz ederim.
           <span style="display:inline-block; width:18px; height:18px; border:1.5px solid black; text-align:center; line-height:18px; font-weight:bold; margin-right:8px;">✗</span>
           Mazeretli olduğum günlere rastlayan diğer derslerimin de sınavına girmediğimi beyan ederim.
         </div>
-
+<div class="table-wrapper">
 <table id="gerekceTablosu" style="margin-top: 30px; width: 100%; border-collapse: collapse;">
   <thead>
     <tr>
@@ -243,7 +250,7 @@ Gereğini saygılarımla arz ederim.
     </tr>
   </thead>
 </table>
-
+</div>
 
 
 
@@ -252,6 +259,7 @@ Gereğini saygılarımla arz ederim.
      
      
    <p style="margin-top: 30px; text-align: center;"><strong>SINAVINA GİREMEDİĞİM DERSLER</strong></p>
+    <div class="table-wrapper">
       <table id="dersTablosu">
         <thead>
           <tr>
@@ -264,6 +272,7 @@ Gereğini saygılarımla arz ederim.
         </thead>
         <tbody></tbody>
       </table>
+    </div>
       
     <div class="alt-kisim">
   <div class="sol-metni">
@@ -432,57 +441,53 @@ const kod = formatDersKodu(kodRaw);
   function startPdf() {
     const element = document.getElementById("dilekceOutput");
 
-    html2canvas(element, {
-      scale: 3,
-      useCORS: true,
-      logging: false
-    }).then(canvas => {
-      const imgData = canvas.toDataURL("image/jpeg", 0.8); // 0.8 kalite, isteğe göre düşürülebilir
+   html2canvas(element, {
+  scale: 3,
+  useCORS: true,
+  logging: false
+}).then(canvas => {
+  const imgData = canvas.toDataURL("image/jpeg", 0.9);
 
+  const pdf = new window.jspdf.jsPDF({
+    unit: "mm",
+    format: "a4",
+    orientation: "portrait"
+  });
 
-      const pdfWidth = 210;
-      const pdfHeight = 297;
-      const canvasWidth = canvas.width;
-      const canvasHeight = canvas.height;
-      const pxPerMm = canvasWidth / pdfWidth;
-      const imgHeightInPdf = canvasHeight / pxPerMm;
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight = pdf.internal.pageSize.getHeight();
+  const imgWidth = pdfWidth;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-      const pdf = new window.jspdf.jsPDF({
-        unit: "mm",
-        format: "a4",
-        orientation: "portrait"
-      });
+  let position = 0;
+  let heightLeft = imgHeight;
 
-      let renderHeight = imgHeightInPdf;
-      let renderWidth = pdfWidth;
+  // Eğer çıktı bir sayfadan uzunsa sayfa ekle
+  while (heightLeft > 0) {
+    pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+    heightLeft -= pdfHeight;
+    if (heightLeft > 0) {
+      pdf.addPage();
+      position = -pdfHeight;
+    }
+  }
 
-      if (imgHeightInPdf > pdfHeight) {
-        const scale = pdfHeight / imgHeightInPdf;
-        renderHeight = pdfHeight;
-        renderWidth = pdfWidth * scale;
-      }
+  pdf.setFont("helvetica", "italic");
+  pdf.setFontSize(8);
+  pdf.setTextColor(150);
+  pdf.text("(Form No: FR-0607; Revizyon Tarihi:14.01.2014; Revizyon No: 00)", 10, 290);
 
-      pdf.addImage(imgData, "PNG", 0, 0, renderWidth, renderHeight);
+  pdf.save(`${window.adSoyad || "dilekce"}.pdf`);
+  downloadBtnDiv.style.visibility = "visible";
+});
 
-pdf.setFont("helvetica", "italic"); // italik font
-pdf.setFontSize(8);
-pdf.setTextColor(150); // silik gri
-pdf.text("(Form No: FR-0607; Revizyon Tarihi:14.01.2014; Revizyon No: 00)", 10, 290);
-
-      pdf.save(`${window.adSoyad || "dilekce"}.pdf`);
-
-      // Butonu tekrar göster
-      downloadBtnDiv.style.visibility = "visible";
-    }).catch(e => {
-      alert("PDF oluşturulurken hata oluştu: " + e.message);
-      downloadBtnDiv.style.visibility = "visible";
-    });
   }
 });
 
   </script>
 </body>
 </html>
+
 
 
 
