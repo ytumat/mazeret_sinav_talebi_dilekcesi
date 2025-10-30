@@ -495,10 +495,18 @@ const kod = formatDersKodu(kodRaw);
 
 
   pdf.setFont("helvetica", "italic");
-  pdf.setFontSize(8);
-  pdf.setTextColor(150);
- const footerY = pdf.internal.pageSize.getHeight() - 7; // her cihazda sayfa altı
-pdf.text("(Form No: FR-0607; Revizyon Tarihi:14.01.2014; Revizyon No: 00)", 10, footerY);
+pdf.setFontSize(8);
+pdf.setTextColor(150);
+
+const footerText = "(Form No: FR-0607; Revizyon Tarihi:14.01.2014; Revizyon No: 00)";
+const pageCount = pdf.internal.getNumberOfPages();
+
+for (let i = 1; i <= pageCount; i++) {
+  pdf.setPage(i);
+  const footerY = pdf.internal.pageSize.getHeight() - 7; // sayfa altı konumu
+  pdf.text(footerText, 10, footerY);
+}
+
 
 
   pdf.save(`${window.adSoyad || "dilekce"}.pdf`);
@@ -511,6 +519,7 @@ pdf.text("(Form No: FR-0607; Revizyon Tarihi:14.01.2014; Revizyon No: 00)", 10, 
   </script>
 </body>
 </html>
+
 
 
 
