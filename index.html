@@ -446,11 +446,16 @@ const kod = formatDersKodu(kodRaw);
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
     // Resmi ekle
-    let heightLeft = imgHeight;
-    let position = 0;
+    let imgHeight = (canvas.height * imgWidth) / canvas.width;
+let pageHeight = pdf.internal.pageSize.getHeight();
 
-    pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
+let heightLeft = imgHeight - pageHeight;
+let position = 0;
+
+pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+
+const tolerance = 20; // 15 yerine 20 toleransla fazla sayfa açmayı engeller
+
 
     // 🔧 küçük tolerans ekle — < 15px taşma varsa yeni sayfa oluşturma
     const tolerance = 15;
@@ -475,8 +480,14 @@ const kod = formatDersKodu(kodRaw);
       const footerY = pdf.internal.pageSize.getHeight() - 10;
       pdf.text(footerText, pageWidth / 2, footerY, { align: "center" });
     }
-
-    pdf.save(`${window.adSoyad || "dilekce"}.pdf`);
+// 📱 Mobilde güvenli indirme
+pdf.output('blob').then(function (blob) {
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `${window.adSoyad || "dilekce"}.pdf`;
+  link.click();
+  URL.revokeObjectURL(link.href);
+  
   });
 });
 
@@ -484,6 +495,7 @@ const kod = formatDersKodu(kodRaw);
   </script>
 </body>
 </html>
+
 
 
 
