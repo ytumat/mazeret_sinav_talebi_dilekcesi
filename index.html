@@ -430,86 +430,61 @@ const kod = formatDersKodu(kodRaw);
       document.getElementById("downloadBtnDiv").style.display = "block";
     });
 
-    document.getElementById("downloadBtn").addEventListener("click", function () {
-  const img = document.querySelector(".logo-image");
-  const downloadBtnDiv = document.getElementById("downloadBtnDiv");
+   document.getElementById("downloadBtn").addEventListener("click", function () {
+  const element = document.querySelector(".letter-section");
 
-  // Butonu gizle
-  downloadBtnDiv.style.visibility = "hidden";
+  html2canvas(element, {
+    scale: 2.6, // 3 yerine 2.6: biraz küçült, A4'e sığsın
+    useCORS: true,
+    logging: false
+  }).then(canvas => {
+    const imgData = canvas.toDataURL("image/jpeg", 1.0);
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const imgWidth = pageWidth;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-  if (!img.complete) {
-    img.onload = () => startPdf();
-    img.onerror = () => {
-      alert("Logo yüklenemedi!");
-      startPdf();
-    };
-  } else {
-    startPdf();
-  }
+    // Resmi ekle
+    let heightLeft = imgHeight;
+    let position = 0;
 
-  function startPdf() {
-    const element = document.getElementById("dilekceOutput");
-
-   html2canvas(element, {
-  scale: 2.6,
-  useCORS: true,
-  logging: false
-}).then(canvas => {
-  const imgData = canvas.toDataURL("image/jpeg", 0.9);
-
-  const pdf = new window.jspdf.jsPDF({
-    unit: "mm",
-    format: "a4",
-    orientation: "portrait"
-  });
-
-  const pdfWidth = pdf.internal.pageSize.getWidth();
-  const pdfHeight = pdf.internal.pageSize.getHeight();
-  const imgWidth = pdfWidth;
-  const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-   let position = 0;
-  let heightLeft = imgHeight;
-
-  pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-  heightLeft -= pdfHeight;
-
-// 🔧 Burada tolerans ekliyoruz:
-const tolerance = 10; // px cinsinden: 10px'den az taşma varsa yeni sayfa ekleme
-     
-  while (heightLeft > 0) {
-    position = heightLeft - imgHeight;
-    pdf.addPage();
     pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-    heightLeft -= pdfHeight;
-  }
+    heightLeft -= pageHeight;
 
+    // 🔧 küçük tolerans ekle — < 15px taşma varsa yeni sayfa oluşturma
+    const tolerance = 15;
 
-  pdf.setFont("helvetica", "italic");
-pdf.setFontSize(8);
-pdf.setTextColor(150);
+    while (heightLeft > tolerance) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
 
-const footerText = "(Form No: FR-0607; Revizyon Tarihi:14.01.2014; Revizyon No: 00)";
-const pageCount = pdf.internal.getNumberOfPages();
+    // 🔽 Footer her sayfaya eklensin
+    pdf.setFont("helvetica", "italic");
+    pdf.setFontSize(8);
+    pdf.setTextColor(150);
 
-for (let i = 1; i <= pageCount; i++) {
-  pdf.setPage(i);
-  const footerY = pdf.internal.pageSize.getHeight() - 7; // sayfa altı konumu
-  pdf.text(footerText, 10, footerY);
-}
+    const footerText = "(Form No: FR-0607; Revizyon Tarihi:14.01.2014; Revizyon No: 00)";
+    const pageCount = pdf.internal.getNumberOfPages();
 
+    for (let i = 1; i <= pageCount; i++) {
+      pdf.setPage(i);
+      const footerY = pdf.internal.pageSize.getHeight() - 10;
+      pdf.text(footerText, pageWidth / 2, footerY, { align: "center" });
+    }
 
-
-  pdf.save(`${window.adSoyad || "dilekce"}.pdf`);
-  downloadBtnDiv.style.visibility = "visible";
+    pdf.save(`${window.adSoyad || "dilekce"}.pdf`);
+  });
 });
 
-  }
-});
 
   </script>
 </body>
 </html>
+
 
 
 
