@@ -486,6 +486,9 @@ const kod = formatDersKodu(kodRaw);
   pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
   heightLeft -= pdfHeight;
 
+// 🔧 Burada tolerans ekliyoruz:
+const tolerance = 10; // px cinsinden: 10px'den az taşma varsa yeni sayfa ekleme
+     
   while (heightLeft > 0) {
     position = heightLeft - imgHeight;
     pdf.addPage();
@@ -519,6 +522,7 @@ for (let i = 1; i <= pageCount; i++) {
   </script>
 </body>
 </html>
+
 
 
 
