@@ -6,124 +6,98 @@
 
   <title>Dilekçe Oluştur</title>
   <style>
-    body {
-      font-family: Calibri, "Times New Roman", serif;
-      background-color: #f4f4f4;
-      padding: 20px;
-    }
-    .container {
-      max-width: 900px;
-      width: 95%;           /* Mobil ekranlarda kenarlardan taşmayı engeller */
-      margin: auto;
-      background: white;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 8px;
-      margin-top: 6px;
-      margin-bottom: 16px;
-      font-size: 16px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      margin-top: 10px;
-      margin-right: 10px;
-      cursor: pointer;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 30px;
-    }
-    table, th, td {
-      border: 1px solid black;
-      text-align: center;
-      padding: 10px;
-    }
-    .letter-section {
-      display: none;
-      margin-top: 40px;
-      padding: 40px;
-      background: white;
-      border: none;
-    }
-    .center-text {
-      text-align: center;
-      margin: 0;
-      line-height: 1.1;
-    }
-    .left-text {
-      text-align: justify;
-      margin-top: 20px;
-      white-space: pre-line;
-    }
-    .download-button {
-      display: none;
-      margin-top: 20px;
-    }
-    .ders-item {
-      border: 1px solid #ccc;
-      padding: 10px;
-      margin-bottom: 20px;
-      background-color: #fafafa;
-    }
-    @media print {
-      body * {
-        visibility: hidden;
-      }
-      .letter-section, .letter-section * {
-        visibility: visible;
-      }
-      .letter-section {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 210mm;
-        height: 297mm;
-        background: white !important;
-        padding: 40px;
-        margin: 0;
-        box-shadow: none !important;
-        border: none !important;
-      }
-      .download-button {
-        display: none !important;
-      }
-    }
-    .logo-image {
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      margin-bottom: 20px;
-      max-width: 80px;
-      height: auto;
-    }
+   body {
+  font-family: Calibri, "Times New Roman", serif;
+  background-color: #f4f4f4;
+  padding: 15px;
+}
 
+/* 🧱 Ana kapsayıcı */
+.container {
+  max-width: 900px;
+  width: 95%;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 🎯 Form Elemanları */
+input, select, textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 12px; /* bir miktar azaldı */
+  font-size: 16px;
+}
+
+/* 🔘 Butonlar */
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-top: 8px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+/* 📋 Tablolar */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+table, th, td {
+  border: 1px solid black;
+  text-align: center;
+  padding: 8px;
+}
+
+/* 📄 Dilekçe Bölümü */
+.letter-section {
+  width: 794px;         /* A4 genişliği */
+  min-height: 1123px;   /* A4 yüksekliği */
+  margin: 0 auto;
+  background: white;
+  padding: 25px 35px;   /* 40px → azaltıldı */
+  box-sizing: border-box;
+}
+
+/* 🧾 Yazı ve hizalamalar */
+.center-text {
+  text-align: center;
+  margin: 0;
+  line-height: 1.1;
+}
+.left-text {
+  text-align: justify;
+  margin-top: 12px;
+  white-space: pre-line;
+  line-height: 1.2;
+}
+
+/* 📅 Tarih ve İmza alanları */
 .tarih-sag {
   text-align: right;
   margin: 0;
   font-size: 16px;
 }
-#tarihYeri,
-#imzaAlani {
+#tarihYeri, #imzaAlani {
   display: none;
 }
 
+/* 📦 Alt kısım (iki kolon) */
 .alt-kisim {
   display: flex;
   justify-content: space-between;
-  gap: 20px; /* İki kolon arası boşluk */
-  margin-top: 30px;
+  gap: 10px; /* 20 → 10 */
+  margin-top: 15px;
 }
 
 .sol-metni {
   flex: 1;
   max-width: 50%;
   font-size: 13px;
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 .sag-tablo {
@@ -131,71 +105,85 @@
   max-width: 50%;
 }
 
-.sag-tablo table {
-  width: 100%; /* tabloyu kapsayıcıya yay */
-  border-collapse: collapse;
-}
-
 .sag-tablo td {
   border: 1px solid black;
-  padding: 10px;
-  height: 100px;
-  /* width kaldırıldı, çünkü flex düzenlemesi var */
-}
-#dersTablosu td {
-  height: 5px; /* İstediğin düşük değeri buraya yaz */
-  padding: 3px 10px; /* Dilersen padding ile de oynayabilirsin */
+  padding: 8px;
+  height: 90px; /* 100px → azaltıldı */
 }
 
+/* 🧩 Gerekçe ve ders tabloları için satır yüksekliği */
+#gerekceTablosu,
+#dersTablosu {
+  page-break-inside: avoid;
+}
+#dersTablosu td {
+  height: 5px;
+  padding: 3px 8px;
+}
+
+/* 📜 PDF için özel yazdırma modu */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .letter-section, .letter-section * {
+    visibility: visible;
+  }
+  .letter-section {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 210mm;
+    height: 297mm;
+    padding: 25px 35px !important;
+    background: white !important;
+    margin: 0;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  .download-button {
+    display: none !important;
+  }
+}
+
+/* 🌐 Mobil görünüm */
 @media (max-width: 768px) {
   .alt-kisim {
-    flex-direction: column;     /* İki kolon üst üste gelsin */
+    flex-direction: column;
   }
   .sol-metni, .sag-tablo {
     max-width: 100%;
   }
   .logo-image {
-    max-width: 60px;           /* Küçük ekranda logo daha ufak */
+    max-width: 60px;
   }
   button {
-    width: 100%;               /* Butonlar ekrana otursun */
+    width: 100%;
     margin-top: 10px;
   }
-   /* 💡 Eklenen kısım: form elemanlarının boşluklarını mobilde küçültür */
+
+  /* Form elemanlarında dikey boşluğu daha da azalt */
   input, textarea, select {
     margin-bottom: 8px;
   }
-}
-/* Tüm tablolar için */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 30px;
-}
 
-/* Sadece geniş tablo içeriği için yatay kaydırma */
-.table-wrapper {
-  width: 100%;
-  overflow-x: auto; /* Mobilde yatay kaydırma aktif olur */
-}
+  /* PDF görünüm alanında padding azalt */
+  .letter-section {
+    width: 100%;
+    min-height: auto;
+    padding: 15px;
+  }
 
-    /* --- PDF çıktısı için tam A4 boyutunda sabit alan --- */
-.letter-section {
-  width: 794px;             /* A4 genişliği (96 DPI'ya göre) */
-  min-height: 1123px;       /* A4 yüksekliği */
-  margin: 0 auto;           /* Ortala */
-  background: white;
-  padding: 40px;
-  box-sizing: border-box;
-}
+  /* Tabloları kaydırılabilir yap */
+  .table-wrapper {
+    overflow-x: auto;
+  }
 
-/* Sayfa sonuna yakın içeriklerin bölünmesini engeller */
-.alt-kisim,
-#gerekceTablosu,
-#dersTablosu {
-  page-break-inside: avoid;
+  p {
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
 }
-
 
     
   </style>
@@ -463,7 +451,7 @@ const kod = formatDersKodu(kodRaw);
     const element = document.getElementById("dilekceOutput");
 
    html2canvas(element, {
-  scale: 3,
+  scale: 2.6,
   useCORS: true,
   logging: false
 }).then(canvas => {
@@ -522,6 +510,7 @@ for (let i = 1; i <= pageCount; i++) {
   </script>
 </body>
 </html>
+
 
 
 
