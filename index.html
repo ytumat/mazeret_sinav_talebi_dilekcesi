@@ -200,6 +200,18 @@ table {
 #dersTablosu {
   margin-top: 2px !important; /* 30px yerine 2px yapıyoruz */
 }
+@media (max-width: 480px) {
+  body {
+    font-size: 13px;      /* Küçük ekranlarda yazı boyutu küçülür */
+  }
+  h2 {
+    font-size: 18px;      /* Başlık mobilde daha uyumlu görünür */
+    text-align: center;
+  }
+  .container {
+    padding: 10px;        /* Kenar boşluklarını azaltır */
+  }
+}
 
     
   </style>
@@ -529,3 +541,4 @@ for (let i = 1; i <= pageCount; i++) {
   </script>
 </body>
 </html>
+
