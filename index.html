@@ -146,7 +146,7 @@
 #dersTablosu td {
   height: 5px; /* İstediğin düşük değeri buraya yaz */
   padding: 3px 10px; /* Dilersen padding ile de oynayabilirsin */
-}
+  }
 
 @media (max-width: 768px) {
   .alt-kisim {
@@ -197,6 +197,9 @@ table {
   page-break-inside: avoid;
 }
 
+#dersTablosu {
+  margin-top: 2px !important; /* 30px yerine 2px yapıyoruz */
+}
 
     
   </style>
@@ -252,12 +255,12 @@ table {
  <p> Bölümünüz <strong><span id="numaraYazisi"></span></strong> numaralı öğrencisiyim. Ekte sunulan mazeretim nedeniyle aşağıda belirttiğim derslerin ara sınavına giremedim. Adı geçen derslerden Mazeret sınavına girmek istiyorum.<br><br>
 Gereğini saygılarımla arz ederim.   
 </p>
-<p id="adSoyadYazisi" style="text-align: right; margin-top: 40px;"></p>
-<p id="epostaAltMetin" style="text-align: center; margin-top: 40px; color:red; font-style: italic;"></p>
-<p id="telefonYazisi" style="text-align: left; margin-top: 10px;"></p>
+<p id="adSoyadYazisi" style="text-align: right; margin-top: 20px;"></p>
+<p id="epostaAltMetin" style="text-align: center; margin-top: 25px; color:red; font-style: italic;"></p>
+<p id="telefonYazisi" style="text-align: left; margin-top: 15px;"></p>
 <p id="emailYazisi" style="text-align: left; margin-top: 2px;"></p>
 <br>
-<div style="text-align:left; margin-top:10px;">
+<div style="text-align:left; margin-top:8px;">
           <span style="display:inline-block; width:18px; height:18px; border:1.5px solid black; text-align:center; line-height:18px; font-weight:bold; margin-right:8px;">✗</span>
           Mazeretli olduğum günlere rastlayan diğer derslerimin de sınavına girmediğimi beyan ederim.
         </div>
@@ -280,7 +283,10 @@ Gereğini saygılarımla arz ederim.
    <div class="left-text" id="ogrenciBilgileri"></div>
      
      
-   <p style="margin-top: 30px; text-align: center;"><strong>SINAVINA GİREMEDİĞİM DERSLER</strong></p>
+<p style="margin-top: 40px; margin-bottom: 0px; text-align: center;">
+  <strong>SINAVINA GİREMEDİĞİM DERSLER</strong>
+</p>
+
     <div class="table-wrapper">
       <table id="dersTablosu">
         <thead>
@@ -490,7 +496,7 @@ const kod = formatDersKodu(kodRaw);
 // 🔧 Burada tolerans ekliyoruz:
 const tolerance = 10; // px cinsinden: 10px'den az taşma varsa yeni sayfa ekleme
      
-  while (heightLeft > 0) {
+  while (heightLeft > tolerance) {
     position = heightLeft - imgHeight;
     pdf.addPage();
     pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
@@ -523,4 +529,3 @@ for (let i = 1; i <= pageCount; i++) {
   </script>
 </body>
 </html>
-
